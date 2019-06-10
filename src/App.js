@@ -4,7 +4,7 @@ import pics from "./pics.json";
 import Card from "./components/Card";
 
 let chosen = [] 
-
+// Setting the state
 class App extends Component {
   
   state = {
@@ -12,18 +12,18 @@ class App extends Component {
     score: 0,
     topScore: 0,
   };
-
+  //incrementing score by 1 and setting new state.score
   handleScoreChange = () => {
     
     this.setState({ score: this.state.score + 1})
   };
-
+//setting new state if current score is bigger than the current top score
   handleTopScoreChange = () => { 
     if(this.state.score >= this.state.topScore){
       this.setState({topScore: this.state.score})
     }
   }
-
+//randomly shuffle pics from the json file
   shuffle(a) { 
     for (let i = this.state.pics.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -31,7 +31,7 @@ class App extends Component {
     }
     return a;
 }
-
+//either change the top score or the current score based on the chosen pic, shuffle photos and set new state.
   randomizePics = id => {
 
 if (chosen.includes(id)){ 
@@ -53,7 +53,7 @@ else{
     
     this.setState({ pics });
   };
-
+//generate what we'll actually be seeing on the client side
 render() { 
   return (
       <div className = "container"> 
