@@ -1,41 +1,82 @@
 import React, { Component } from "react";
-import FriendCard from "./components/FriendCard";
 import Wrapper from "./components/Wrapper";
-import Title from "./components/Title";
-import friends from "./friends.json";
+import pics from "./pics.json";
+import Card from "./components/Card";
+
+let chosen = [] 
 
 class App extends Component {
-  // Setting this.state.friends to the friends json array
+  
   state = {
-    friends
+    pics,
+    score: 0,
+    topScore: 0,
   };
 
-  removeFriend = id => {
-    // Filter this.state.friends for friends with an id not equal to the id being removed
-    const friends = this.state.friends.filter(friend => friend.id !== id);
-    // Set this.state.friends equal to the new friends array
-    this.setState({ friends });
+  handleScoreChange = () => {
+    
+    this.setState({ score: this.state.score + 1})
   };
 
-  // Map over this.state.friends and render a FriendCard component for each friend object
-  render() {
-    return (
-      <Wrapper>
-        <Title>React Memory Game</Title>
-        {this.state.friends.map(friend => (
-          <FriendCard
-            removeFriend={this.removeFriend}
-            id={friend.id}
-            key={friend.id}
-            name={friend.name}
-            image={friend.image}
-            occupation={friend.occupation}
-            location={friend.location}
+  handleTopScoreChange = () => { 
+    if(this.state.score >= this.state.topScore){
+      this.setState({topScore: this.state.score})
+    }
+  }
+
+  shuffle(a) { 
+    for (let i = this.state.pics.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+  randomizePics = id => {
+
+if (chosen.includes(id)){ 
+    alert("You already chose that character! Start Again!!!")
+    chosen = []
+    this.setState({
+      score: 0
+    })
+    this.handleTopScoreChange()
+}
+else{
+    chosen.push(id)
+    this.handleScoreChange()
+}
+
+    const pics = this.shuffle(this.state.pics)
+    console.log(pics)
+    
+    
+    this.setState({ pics });
+  };
+
+render() { 
+  return (
+      <div className = "container"> 
+        <div className = "jumbotron">
+        <h1>React Memory Game</h1>
+        <h2>Click on an image to start!</h2>
+        <h2>Score: {this.state.score} | Top Score: {this.state.topScore}</h2>
+        </div>
+        <Wrapper>
+        {this.state.pics.map(pic => ( 
+          <Card
+            randomizePics={this.randomizePics}
+            id={pic.id}
+            key={pic.id}
+            name={pic.name}
+            image={pic.image}
+            occupation={pic.occupation}
           />
         ))}
-      </Wrapper>
-    );
-  }
+        </Wrapper>
+      </div>
+  );
+}
 }
 
 export default App;
